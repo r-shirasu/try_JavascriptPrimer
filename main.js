@@ -1,22 +1,33 @@
 const program = require("commander");
-// fsモジュールをfsオブジェクトとしてインポートする
 const fs = require("fs");
+const marked = require("marked");
 
-// コマンドライン引数からファイルパスを取得する
+// gfmオプションを定義する
+program.option("--gfm", "GFMを有効にする");
 program.parse(process.argv);
 const filePath = program.args[0];
 
-// ファイルを非同期で読み込む
+// コマンドライン引数のオプションを取得する
+const options = program.opts();
+
+// コマンドライン引数で指定されなかったオプションにデフォルト値を上書きする
+const cliOptions = {
+  gfm: options.gfm ?? false,
+};
+
 fs.readFile(filePath, { encoding: "utf8" }, (err, file) => {
   if (err) {
     console.error(err.message);
-    //   終了ステータス　1（一般的なエラー）としてプロセスを終了する
     process.exit(1);
     return;
   }
-  console.log(file);
+  const html = marked(file, {
+    // オプションの値を使用する
+    gfm: cliOptions.gfm,
+  });
+  console.log(html);
 });
 
-// fsモジュールのreadFile関数を使ってファイルを読み込んだ
-// UTF-8形式のファイルの中身をコンソールに出力した
-// readFile関数の呼び出しにエラーハンドリング処理を記述した
+// markedパッケージを使ってMarkdown文字列をHTML文字列に変換した
+// コマンドライン引数でmarkedの変換オプションを設定した
+// デフォルトオプションを定義し、コマンドライン引数で上書きできるようにした
