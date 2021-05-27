@@ -16,3 +16,7 @@ fs.readFile(filePath, { encoding: "utf8" }, (err, file) => {
   }
   console.log(file);
 });
+
+// fsモジュールのreadFile関数を使ってファイルを読み込んだ
+// UTF-8形式のファイルの中身をコンソールに出力した
+// readFile関数の呼び出しにエラーハンドリング処理を記述した
